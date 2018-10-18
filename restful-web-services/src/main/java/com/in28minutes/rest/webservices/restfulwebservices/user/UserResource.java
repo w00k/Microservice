@@ -3,8 +3,6 @@ package com.in28minutes.rest.webservices.restfulwebservices.user;
 import java.net.URI;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,9 +34,8 @@ public class UserResource {
 		return user;
 	}
 
-	//@Valid make a validation for every users (name size and birthday) 
 	@PostMapping("/users")
-	public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+	public ResponseEntity<Object> createUser(@RequestBody User user) {
 		User savedUser = service.save(user);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId()).toUri();
