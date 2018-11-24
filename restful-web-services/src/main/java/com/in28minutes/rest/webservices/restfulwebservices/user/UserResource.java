@@ -2,6 +2,9 @@ package com.in28minutes.rest.webservices.restfulwebservices.user;
 
 import java.net.URI;
 import java.util.List;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,20 +28,28 @@ public class UserResource {
 	}
 
 	@GetMapping("/users/{id}")
-	public User retrieveUser(@PathVariable int id) {
+	public Resource<User> retrieveUser(@PathVariable int id) {
 		User user = service.findOne(id);
 
 		if (user == null)
-			throw new UserNotFoundException("id-" + id); //catch user not found 
+			throw new UserNotFoundException("id-" + id); // catch user not found
+		
+		Resource<User> resource = new Resource<User>(user);
 
-		return user;
+		ControllerLinkBuilder linkTo = ControllerLinkBuilder
+				.linkTo(ControllerLinkBuilder.methodOn(this.getClass()).retrieveAllUsers());
+
+		resource.add(linkTo.withRel("all-users"));
+		
+		return resource;
 	}
 
 	@PostMapping("/users")
-	public ResponseEntity<Object> createUser(@RequestBody User user) {
+	public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
 		User savedUser = service.save(user);
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
+				.toUri();
 
 		return ResponseEntity.created(location).build(); // HTTP 201 best practice to create
 	}
@@ -48,7 +59,7 @@ public class UserResource {
 		User user = service.deleteById(id);
 
 		if (user == null)
-			throw new UserNotFoundException("id-" + id); //catch user not found 
+			throw new UserNotFoundException("id-" + id); // catch user not found
 
 	}
 }
