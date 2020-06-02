@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: Francisco Arenas
+Build-Jdk: 11.0.7
+Implementation-Title: in28minutes-demo
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.in28minutes.sprintboot
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/in28minutes-demo
+Created-By: Maven Integration for Eclipse
+
